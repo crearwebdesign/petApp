@@ -15,8 +15,8 @@ export class SetProductosComponent implements OnInit {
     precioNormal : null,
     precioReducido : null,
     foto : '',
-    id : '',
-    fecha : null,
+    id : this.firestoreService.getId(),
+    fecha : new Date()
   };
 
   private path = 'productos/';
@@ -24,15 +24,21 @@ export class SetProductosComponent implements OnInit {
   constructor( public menucontroller : MenuController,
                public firestoreService : FirestoreService ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getProductos();
+  }
 
   openMenu() {
     this.menucontroller.toggle('principal');
   }
 
   guardarProducto(){
-    const id = this.firestoreService.getId();
-    this.firestoreService.createDoc(this.newProductos,this.path,id);
+    
+    this.firestoreService.createDoc(this.newProductos,this.path,this.newProductos.id);
+  }
+
+  getProductos(){
+    this.firestoreService.getCollection(this.path).subscribe(res => {console.log(res)});
   }
 
 }
