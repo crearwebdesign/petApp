@@ -10,12 +10,30 @@
 </ion-header>
 
 <ion-content>
+
+
+  <div style="text-align: end; margin: 10px;">
+     <ion-button (click)="nuevo()"  class="normal" color="dark">Nuevo</ion-button>
+  </div>
+
+  <div *ngIf="enableNewProducto">
+  
+     <ion-item>
+        <ion-buttons slot="end">
+           <ion-button (click)="enableNewProducto=false">
+             <ion-icon slot="icon-only" name="close"></ion-icon>
+           </ion-button>
+        </ion-buttons>
+     </ion-item>
+
+
+
   <h3 class="subtitulo encabezado" >Ingrese Datos del Producto</h3>
   <ion-item>
     <ion-label class="normal" position="floating" >
         Nombre : 
     </ion-label>
-    <ion-input [(ngModel)]="newProductos.nombre" class="normal" type="text" inputmode="text">
+    <ion-input [(ngModel)]="newProducto.nombre" class="normal" type="text" inputmode="text">
     </ion-input>
   </ion-item>
 
@@ -23,7 +41,7 @@
     <ion-label class="normal" position="floating" >
         Precio Normal : 
     </ion-label>
-    <ion-input [(ngModel)]="newProductos.precioNormal" class="normal" type="number" inputmode="numeric">
+    <ion-input [(ngModel)]="newProducto.precioNormal" class="normal" type="number" inputmode="numeric">
     </ion-input>
   </ion-item>
 
@@ -31,7 +49,7 @@
     <ion-label class="normal" position="floating" >
         Precio Reducido : 
     </ion-label>
-    <ion-input  [(ngModel)]="newProductos.precioReducido"  class="normal" type="number" inputmode="numeric">
+    <ion-input  [(ngModel)]="newProducto.precioReducido"  class="normal" type="number" inputmode="numeric">
     </ion-input>
   </ion-item>
 
@@ -49,5 +67,20 @@
 <ion-button style="margin: 30px;" expand="full" color="dark" (click)="guardarProducto()">
   Guardar
 </ion-button>
+
+</div>
+
+<ion-item *ngFor="let producto of productos" >
+  <ion-label class="normal" >{{producto.nombre}}</ion-label>
+  <ion-buttons slot="end" >
+    <ion-button (click)=" newProducto = producto; enableNewProducto=true; " >
+       <ion-icon  slot="icon-only" name="create-sharp" ></ion-icon>
+    </ion-button>
+    <ion-button (click)="deleteProducto(producto)" >
+       <ion-icon  slot="icon-only" color="danger" name="trash-bin" ></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+</ion-item>
 
  </ion-content>

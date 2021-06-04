@@ -1,6 +1,6 @@
 
 
-export interface Productos {
+export interface Producto {
     nombre : string;
     precioNormal : number;
     precioReducido : number;

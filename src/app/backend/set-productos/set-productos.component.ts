@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { FirestoreService } from '../../services/firestore.service';
-import { Productos } from '../../models';
+import { Producto } from '../../models';
 
 @Component({
   selector: 'app-set-productos',
@@ -10,14 +10,11 @@ import { Productos } from '../../models';
 })
 export class SetProductosComponent implements OnInit {
 
-  newProductos : Productos = {
-    nombre : '',
-    precioNormal : null,
-    precioReducido : null,
-    foto : '',
-    id : this.firestoreService.getId(),
-    fecha : new Date()
-  };
+  productos : Producto[] = [];
+
+  newProducto : Producto;
+
+  enableNewProducto = false;
 
   private path = 'productos/';
 
@@ -34,11 +31,30 @@ export class SetProductosComponent implements OnInit {
 
   guardarProducto(){
     
-    this.firestoreService.createDoc(this.newProductos,this.path,this.newProductos.id);
+    this.firestoreService.createDoc(this.newProducto,this.path,this.newProducto.id);
   }
 
   getProductos(){
-    this.firestoreService.getCollection(this.path).subscribe(res => {console.log(res)});
+    this.firestoreService.getCollection<Producto>(this.path).subscribe(res => {
+      this.productos = res;
+      });
+  }
+
+  deleteProducto(producto : Producto){
+    this.firestoreService.deleteDoc(this.path, producto.id);
+  }
+
+  nuevo(){
+    
+    this.enableNewProducto = true;
+    this.newProducto = {
+    nombre : '',
+    precioNormal : null,
+    precioReducido : null,
+    foto : '',
+    id : this.firestoreService.getId(),
+    fecha : new Date()
+     };
   }
 
 }
