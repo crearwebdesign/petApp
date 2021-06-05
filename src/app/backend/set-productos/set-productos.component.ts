@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { FirestoreService } from '../../services/firestore.service';
 import { Producto } from '../../models';
 
@@ -18,8 +18,13 @@ export class SetProductosComponent implements OnInit {
 
   private path = 'productos/';
 
+  loading : any;
+
   constructor( public menucontroller : MenuController,
-               public firestoreService : FirestoreService ) { }
+               public firestoreService : FirestoreService,
+               public loadingController: LoadingController,
+               public toastController: ToastController,
+               public alertController: AlertController ) { }
 
   ngOnInit() {
     this.getProductos();
@@ -30,8 +35,13 @@ export class SetProductosComponent implements OnInit {
   }
 
   guardarProducto(){
-    
-    this.firestoreService.createDoc(this.newProducto,this.path,this.newProducto.id);
+    this.presentLoading();
+    this.firestoreService.createDoc(this.newProducto,this.path,this.newProducto.id).then( res => {
+      this.loading.dismiss();
+      this.presentToast('Guardado con Exito');
+    } ).catch( error => {
+      this.presentToast('No se pudo Guardar');
+    } );
   }
 
   getProductos(){
@@ -40,8 +50,35 @@ export class SetProductosComponent implements OnInit {
       });
   }
 
-  deleteProducto(producto : Producto){
-    this.firestoreService.deleteDoc(this.path, producto.id);
+  async deleteProducto(producto : Producto){
+
+    const alert = await this.alertController.create({
+      cssClass: 'normal',
+      header: 'Advertencia',
+      message: 'Seguro desea <strong>Eliminar</strong> este Producto',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'normal',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Eliminar',
+          handler: () => {
+            this.firestoreService.deleteDoc(this.path, producto.id).then( res => {
+              this.presentToast('Eliminado con Exito');
+              //this.alertController.dismiss();
+            } ).catch( error => {
+              this.presentToast('No se pudo Eliminar');
+            } );
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
   nuevo(){
@@ -55,6 +92,24 @@ export class SetProductosComponent implements OnInit {
     id : this.firestoreService.getId(),
     fecha : new Date()
      };
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      cssClass: 'normal',
+      message: 'Guardando',      
+    });
+    await this.loading.present();
+  }
+
+  async presentToast( msg : string ) {
+    const toast = await this.toastController.create({
+      message: msg,
+      cssClass: 'normal',
+      duration: 2000,
+      color: 'light',
+    });
+    toast.present();
   }
 
 }
