@@ -112,4 +112,8 @@ export class SetProductosComponent implements OnInit {
     toast.present();
   }
 
+  newImageUpload(file : any){
+    console.log(file);
+  }
+
 }
