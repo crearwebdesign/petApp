@@ -7,4 +7,16 @@ import { AngularFireStorage } from '@angular/fire/storage';
 export class FirestorageService {
 
   constructor( public fireStorage : AngularFireStorage ) { }
+
+  uploadImage(){
+    return new Promise( resolve => {
+
+      setTimeout(() => {
+        resolve(true);
+        console.log('Responde la promesa');
+        return;
+      }, 2000);
+
+    } );
+  }
 }

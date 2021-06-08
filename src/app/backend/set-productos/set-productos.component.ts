@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { FirestoreService } from '../../services/firestore.service';
 import { Producto } from '../../models';
+import { FirestorageService } from 'src/app/services/firestorage.service';
 
 @Component({
   selector: 'app-set-productos',
@@ -20,11 +21,14 @@ export class SetProductosComponent implements OnInit {
 
   loading : any;
 
+  newImage = '';
+
   constructor( public menucontroller : MenuController,
                public firestoreService : FirestoreService,
                public loadingController: LoadingController,
                public toastController: ToastController,
-               public alertController: AlertController ) { }
+               public alertController: AlertController,
+               public firestorageService : FirestorageService ) { }
 
   ngOnInit() {
     this.getProductos();
@@ -112,8 +116,15 @@ export class SetProductosComponent implements OnInit {
     toast.present();
   }
 
-  newImageUpload(file : any){
-    console.log(file);
+  newImageUpload( event : any){
+    if (event.target.files && event.target.files[0]){
+      const reader = new FileReader();
+      reader.onload = ( (image) => {
+        this.newImage = image.target.result as string;
+      } );
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
   }
 
 }
