@@ -6,16 +6,16 @@ import { AngularFireStorage } from '@angular/fire/storage';
 })
 export class FirestorageService {
 
-  constructor( public fireStorage : AngularFireStorage ) { }
+  constructor( public storage : AngularFireStorage ) { }
 
-  uploadImage(){
+  uploadImage( file: any, path : string, nombre : string) : Promise<string>  {
     return new Promise( resolve => {
 
-      setTimeout(() => {
-        resolve(true);
-        console.log('Responde la promesa');
-        return;
-      }, 2000);
+      const filePath = path+'/'+nombre;
+      const ref = this.storage.ref(filePath);
+      const task = ref.put(file);
+      resolve('este es el enlace');
+      
 
     } );
   }

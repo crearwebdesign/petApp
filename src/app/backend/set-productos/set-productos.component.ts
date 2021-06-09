@@ -116,14 +116,19 @@ export class SetProductosComponent implements OnInit {
     toast.present();
   }
 
-  newImageUpload( event : any){
-    if (event.target.files && event.target.files[0]){
-      const reader = new FileReader();
-      reader.onload = ( (image) => {
-        this.newImage = image.target.result as string;
-      } );
-      reader.readAsDataURL(event.target.files[0]);
-    }
+   async newImageUpload( event : any){
+    // if (event.target.files && event.target.files[0]){
+    //   const reader = new FileReader();
+    //   reader.onload = ( (image) => {
+    //     this.newImage = image.target.result as string;
+    //   } );
+    //   reader.readAsDataURL(event.target.files[0]);
+    // }
+
+    const path = 'productos';
+    const name = 'prueba';
+    const file = event.target.files[0];
+    const res = await this.firestorageService.uploadImage(file, path, name);
 
   }
 
