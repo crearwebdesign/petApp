@@ -22,6 +22,7 @@ export class SetProductosComponent implements OnInit {
   loading : any;
 
   newImage = '';
+  newFile = '';
 
   constructor( public menucontroller : MenuController,
                public firestoreService : FirestoreService,
@@ -38,11 +39,15 @@ export class SetProductosComponent implements OnInit {
     this.menucontroller.toggle('principal');
   }
 
-  guardarProducto(){
+  async guardarProducto(){
     this.presentLoading();
+    const path = 'productos';
+    const name = this.newProducto.nombre;
+    const res = await this.firestorageService.uploadImage(this.newFile, path, name);
+    this.newProducto.foto = res;
     this.firestoreService.createDoc(this.newProducto,this.path,this.newProducto.id).then( res => {
-      this.loading.dismiss();
-      this.presentToast('Guardado con Exito');
+       this.loading.dismiss();
+       this.presentToast('Guardado con Exito');
     } ).catch( error => {
       this.presentToast('No se pudo Guardar');
     } );
@@ -117,18 +122,16 @@ export class SetProductosComponent implements OnInit {
   }
 
    async newImageUpload( event : any){
-    // if (event.target.files && event.target.files[0]){
-    //   const reader = new FileReader();
-    //   reader.onload = ( (image) => {
-    //     this.newImage = image.target.result as string;
-    //   } );
-    //   reader.readAsDataURL(event.target.files[0]);
-    // }
+    if (event.target.files && event.target.files[0]){
+      this.newFile = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = ( (image) => {
+        this.newImage = image.target.result as string;
+      } );
+      reader.readAsDataURL(event.target.files[0]);
+    }
 
-    const path = 'productos';
-    const name = 'prueba';
-    const file = event.target.files[0];
-    const res = await this.firestorageService.uploadImage(file, path, name);
+    
 
   }
 
