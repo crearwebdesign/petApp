@@ -23,12 +23,15 @@
            <ion-button (click)="enableNewProducto=false">
              <ion-icon slot="icon-only" name="close"></ion-icon>
            </ion-button>
+           <ion-button (click)="guardarProducto()">
+               <ion-icon color="primary" slot="icon-only" name="save-sharp"></ion-icon>
+          </ion-button>
         </ion-buttons>
      </ion-item>
 
 
 
-  <h3 class="subtitulo encabezado" >Ingrese Datos del Producto</h3>
+ 
   <ion-item>
     <ion-label class="normal" position="floating" >
         Nombre : 
@@ -67,12 +70,17 @@
     </ion-buttons>
   </ion-item>
 
-<ion-button style="margin: 30px;" expand="full" color="dark" (click)="guardarProducto()">
-  Guardar
-</ion-button>
+  <ion-item>
+    <img class="image" [src]="newProducto.foto">
+  </ion-item>
+
+
 
 </div>
 
+
+<ion-card>
+  <h3 class="subtitulo encabezado" >Lista de Productos</h3>
 <ion-item *ngFor="let producto of productos" >
   <ion-label class="normal" >{{producto.nombre}}</ion-label>
   <ion-buttons slot="end" >
@@ -86,6 +94,7 @@
 
 </ion-item>
 
-<img [src]="newImage">
+</ion-card>
+
 
  </ion-content>
