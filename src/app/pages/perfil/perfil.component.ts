@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Cliente } from 'src/app/models';
+import { FirebaseauthService } from '../../services/firebaseauth.service';
+import { FirestorageService } from 'src/app/services/firestorage.service';
+import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-perfil',
@@ -21,9 +24,16 @@ export class PerfilComponent implements OnInit {
 
   newFile : any;
 
-  constructor(public menucontroller : MenuController) { }
+  constructor(public menucontroller : MenuController,
+              public firebaseauthService : FirebaseauthService,
+              public firestorageService : FirestorageService,
+              public firestoreService : FirestoreService) { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    const uid = await this.firebaseauthService.getUid();
+    console.log(uid)
+
+  }
 
   openMenu() {
     this.menucontroller.toggle('principal');
@@ -41,8 +51,38 @@ export class PerfilComponent implements OnInit {
   }
 
 
-  registrarse(){
+  async registrarse(){
+    const credenciales = {
+      email : this.cliente.email,
+      password : this.cliente.celular,
+    };
+    const res = await this.firebaseauthService.registrar(credenciales.email,credenciales.password).catch(
+      err => {console.log("error :"+ err)}
+    );
+    const uid = await this.firebaseauthService.getUid();
+    this.cliente.uid = uid;
+    this.guardarUser();
+  }
+
+
+  async guardarUser(){
     
+    const path = 'Clientes';
+    const name = this.cliente.nombre;
+    if (this.newFile !== undefined){
+      const res = await this.firestorageService.uploadImage(this.newFile, path, name);
+      this.cliente.foto = res;
+    }
+    this.firestoreService.createDoc(this.cliente,path,this.cliente.uid).then( res => {
+        console.log('Guardado con Exito');
+    } ).catch( error => {
+      
+    } );
+  }
+
+
+  salir(){
+    this.firebaseauthService.logout();
   }
 
 }
