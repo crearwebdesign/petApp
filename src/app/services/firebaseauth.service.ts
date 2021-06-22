@@ -34,4 +34,8 @@ export class FirebaseauthService {
     }
   }
 
+  stateAuth(){
+    return this.auth.authState;
+  }
+
 }

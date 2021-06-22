@@ -24,10 +24,20 @@ export class PerfilComponent implements OnInit {
 
   newFile : any;
 
+  uid = '';
+
   constructor(public menucontroller : MenuController,
               public firebaseauthService : FirebaseauthService,
               public firestorageService : FirestorageService,
-              public firestoreService : FirestoreService) { }
+              public firestoreService : FirestoreService) {
+
+                this.firebaseauthService.stateAuth().subscribe(res=>{
+                  if(res !== null){
+                    this.uid = res.uid;
+                    this.getUserInfo(this.uid);
+                  }
+                });
+               }
 
   async ngOnInit() {
     const uid = await this.firebaseauthService.getUid();
@@ -83,6 +93,13 @@ export class PerfilComponent implements OnInit {
 
   salir(){
     this.firebaseauthService.logout();
+  }
+
+  getUserInfo(uid : string){
+    const path = 'Clientes';
+    this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res =>{
+         this.cliente = res;
+    } );
   }
 
 }
