@@ -121,7 +121,7 @@ export class SetProductosComponent implements OnInit {
     toast.present();
   }
 
-   async newImageUpload( event : any){
+   async nuevaImageUpload( event : any){
     if (event.target.files && event.target.files[0]){
       this.newFile = event.target.files[0];
       const reader = new FileReader();

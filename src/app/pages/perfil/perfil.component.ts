@@ -4,6 +4,7 @@ import { Cliente } from 'src/app/models';
 import { FirebaseauthService } from '../../services/firebaseauth.service';
 import { FirestorageService } from 'src/app/services/firestorage.service';
 import { FirestoreService } from '../../services/firestore.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-perfil',
@@ -26,6 +27,10 @@ export class PerfilComponent implements OnInit {
 
   uid = '';
 
+  ingresarEnable = false;
+
+  subscriberUserInfo : Subscription;
+
   constructor(public menucontroller : MenuController,
               public firebaseauthService : FirebaseauthService,
               public firestorageService : FirestorageService,
@@ -35,6 +40,8 @@ export class PerfilComponent implements OnInit {
                   if(res !== null){
                     this.uid = res.uid;
                     this.getUserInfo(this.uid);
+                  }else{
+                    this.initCliente();
                   }
                 });
                }
@@ -43,6 +50,19 @@ export class PerfilComponent implements OnInit {
     const uid = await this.firebaseauthService.getUid();
     console.log(uid)
 
+  }
+
+  initCliente(){
+    this.uid = '';
+    this.cliente = {
+        uid : '',
+        email : '',
+        nombre : '',
+        celular : '',
+        foto : '',
+        referencia : '',
+        ubicacion : '',
+    }
   }
 
   openMenu() {
@@ -62,44 +82,64 @@ export class PerfilComponent implements OnInit {
 
 
   async registrarse(){
+        
     const credenciales = {
       email : this.cliente.email,
       password : this.cliente.celular,
     };
+    console.log(credenciales);
     const res = await this.firebaseauthService.registrar(credenciales.email,credenciales.password).catch(
       err => {console.log("error :"+ err)}
     );
     const uid = await this.firebaseauthService.getUid();
     this.cliente.uid = uid;
+    console.log(uid);
+ 
+
     this.guardarUser();
   }
 
 
-  async guardarUser(){
-    
+  
+
+  async guardarUser() {
+    const customer = this.cliente;
     const path = 'Clientes';
     const name = this.cliente.nombre;
-    if (this.newFile !== undefined){
+    if (this.newFile !== undefined) {
       const res = await this.firestorageService.uploadImage(this.newFile, path, name);
-      this.cliente.foto = res;
+      //this.cliente.foto = res;
+      const dir = res;
+      console.log(dir);
+      customer.foto=dir;
     }
-    this.firestoreService.createDoc(this.cliente,path,this.cliente.uid).then( res => {
-        console.log('Guardado con Exito');
-    } ).catch( error => {
-      
-    } );
+    this.firestoreService.createDoc(customer, path, customer.uid).then( res => {
+        console.log('guardado con exito');
+    }).catch( error => {
+    });
   }
 
 
   salir(){
     this.firebaseauthService.logout();
+    this.subscriberUserInfo.unsubscribe();
   }
 
   getUserInfo(uid : string){
     const path = 'Clientes';
-    this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res =>{
+    this.subscriberUserInfo = this.firestoreService.getDoc<Cliente>(path,uid).subscribe( res =>{
          this.cliente = res;
     } );
+  }
+
+  ingresar(){
+    const credenciales = {
+      email : this.cliente.email,
+      password : this.cliente.celular,
+    };
+    this.firebaseauthService.login(credenciales.email,credenciales.password).then( res=> {
+      console.log('Ingreso con Exito');
+    });
   }
 
 }
