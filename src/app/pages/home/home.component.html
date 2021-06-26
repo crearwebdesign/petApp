@@ -7,9 +7,12 @@
       </ion-button>
     </ion-buttons>
 
+    
+
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/perfil']">
-        <ion-icon color="primary"  slot="icon-only" name="person-circle"></ion-icon>
+        <ion-icon *ngIf="uid.length" color="success"  slot="icon-only" name="person-circle"></ion-icon>
+        <ion-icon *ngIf="!uid.length" color="danger"  slot="icon-only" name="person-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
 
