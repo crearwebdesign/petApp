@@ -19,12 +19,13 @@ export class HomeComponent implements OnInit {
     public firestoreService : FirestoreService,
     public firebaseauthService: FirebaseauthService) {
 
-    this.firebaseauthService.stateAuth().subscribe(res => {
+   this.firebaseauthService.stateAuth().subscribe(res => {
       if (res !== null) {
         this.uid = res.uid;
-        this.loadProductos();
+        this.loadProductos()
       }
     });
+    
     
   }
 
@@ -36,7 +37,7 @@ export class HomeComponent implements OnInit {
 
   loadProductos(){
       this.firestoreService.getCollection<Producto>(this.path).subscribe( res =>{
-        console.log(res);
+        //console.log(res);
         this.articulos = res;
       } );
   }

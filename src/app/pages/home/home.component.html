@@ -20,7 +20,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-item *ngFor="let producto of articulos" >
-    {{producto.nombre}}
-  </ion-item>
+ 
+  <div *ngFor="let articulo of articulos">
+    <app-producto [producto] = articulo ></app-producto>
+
+  </div>
+
 </ion-content>

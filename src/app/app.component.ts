@@ -6,7 +6,9 @@ import { FirebaseauthService } from './services/firebaseauth.service';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
+
 export class AppComponent {
+ 
   constructor(
     private firebaseauthService : FirebaseauthService
   ) {}
