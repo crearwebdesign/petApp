@@ -19,3 +19,20 @@ export interface Cliente {
     ubicacion : any;
 
 }
+
+export interface Pedido {
+    id : string ;
+    cliente : Cliente;
+    productos : ProductoPedido[];
+    precioTotal : number;
+    estado : EstadoPedido;
+    fecha : Date;
+    valoracion : number;
+}
+
+interface ProductoPedido {
+    producto : Producto;
+    cantidad : number;
+}
+
+export type EstadoPedido = 'enviado' | 'visto' | 'camino' | 'entregado';
