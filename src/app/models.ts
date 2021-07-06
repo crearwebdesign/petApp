@@ -30,7 +30,7 @@ export interface Pedido {
     valoracion : number;
 }
 
-interface ProductoPedido {
+export interface ProductoPedido {
     producto : Producto;
     cantidad : number;
 }

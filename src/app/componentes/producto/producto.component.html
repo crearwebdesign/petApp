@@ -5,5 +5,5 @@
   </ion-item>
   <p class="tachado" >{{producto.precioNormal}}</p>
   <p class="precio" >{{producto.precioReducido}}</p>
-  <ion-icon class="icon-producto" name="cart-sharp" ></ion-icon> 
+  <ion-icon (click)="addCarrito()" class="icon-producto" name="cart-sharp" ></ion-icon> 
 </ion-card>
