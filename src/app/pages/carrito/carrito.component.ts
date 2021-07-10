@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
+import { FirestoreService } from 'src/app/services/firestore.service';
 
 @Component({
   selector: 'app-carrito',
@@ -7,8 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CarritoComponent implements OnInit {
 
-  constructor() { }
+  constructor(public menucontroller: MenuController,
+             public firestoreService: FirestoreService) { }
 
   ngOnInit() {}
+
+  openMenu() {
+    this.menucontroller.toggle('principal');
+  }
 
 }
