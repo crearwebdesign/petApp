@@ -68,7 +68,7 @@
         <label for="file-upload">
           <ion-icon slot="icon-only" name="images"></ion-icon>
         </label>
-        <input (change)="nuevaImageUpload($event)"  id="file-upload"  style="display : none" type="file" accept="image/*" />
+        <input (change)="nuevaImageUpload($event)"  id="file-upload"  style="display : none" type="file" accept="image/*" >
 
         
       </ion-button>
@@ -76,7 +76,7 @@
   </ion-item>
 
   <ion-item>
-    <img class="image" [src]="newProducto.foto"/>
+    <img class="image" [src]="newProducto.foto">
     
   </ion-item>
 

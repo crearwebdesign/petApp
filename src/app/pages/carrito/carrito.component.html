@@ -26,11 +26,11 @@
 
 <ion-content>
  
-  <!-- <div *ngFor="let articulo of articulos">
-    <app-producto [producto] = articulo ></app-producto>
+  <div *ngFor="let producto of pedido.productos">
+    
+    <app-itemcarrito [productoPedido]="producto" ></app-itemcarrito>
 
-  </div> -->
+  </div>
 
-  <app-itemcarrito></app-itemcarrito>
 
 </ion-content>
