@@ -8,10 +8,10 @@
         <ion-item>
           <ion-label class="subtitulo ion-text-wrap">{{productoPedido.producto.nombre}}</ion-label>
             <ion-buttons slot="end">
-              <ion-button class="icon-add">
+              <ion-button (click)="addCarrito()" class="icon-add">
                  <ion-icon slot="icon-only" name="add"></ion-icon>
               </ion-button>
-              <ion-button class="icon-remove">
+              <ion-button (click)="removeCarrito()" class="icon-remove">
                 <ion-icon slot="icon-only" name="remove"></ion-icon>
              </ion-button>   
             </ion-buttons>
