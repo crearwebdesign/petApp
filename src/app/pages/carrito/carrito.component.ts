@@ -14,6 +14,8 @@ export class CarritoComponent implements OnInit, OnDestroy {
 
   pedido : Pedido;
   carritoSubscriber : Subscription;
+  total : number;
+  cantidad : number;
   constructor(public menucontroller: MenuController,
              public firestoreService: FirestoreService,
              public carritoService : CarritoService) { 
@@ -36,6 +38,8 @@ export class CarritoComponent implements OnInit, OnDestroy {
   loadPedido(){
     this.carritoSubscriber = this.carritoService.getCarrito().subscribe( res => {
       this.pedido = res;
+      this.getTotal();
+      this.getCantidad();
     })
   };
 
@@ -49,6 +53,25 @@ export class CarritoComponent implements OnInit, OnDestroy {
     fecha : new Date(),
     valoracion : null
     }
-  }
+  };
+
+  getTotal(){
+    this.total = 0;
+    this.pedido.productos.forEach( producto => {
+      this.total = ((producto.producto.precioReducido) * producto.cantidad ) + this.total;
+    } );
+  };
+
+  getCantidad(){
+    this.cantidad = 0;
+    this.pedido.productos.forEach( producto => {
+      this.cantidad =  producto.cantidad  + this.cantidad;
+    } );
+  };
+
+  pedir(){
+    this.pedido.fecha = new Date();
+    console.log("Pedir ->",this.pedido);
+  };
 
 }
