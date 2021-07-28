@@ -93,7 +93,8 @@ export class CarritoService {
     } else {
       this.router.navigate(['perfil/']);
       return;
-    }
+    };
+    this.pedido$.next(this.pedido);
     console.log('en add pedido', this.pedido);
     const path = 'Clientes/' + this.uid + '/' + this.path;
     this.firestoreService.createDoc(this.pedido, path, this.uid).then(() => {
@@ -127,7 +128,10 @@ export class CarritoService {
   }
 
   clearCarrito() {
-
+    const path = 'Clientes/' + this.uid + '/' + this.path;
+    this.firestoreService.deleteDoc(path,this.uid).then( ()=> {
+        this.initCarrito();
+    } );
   }
 
 }

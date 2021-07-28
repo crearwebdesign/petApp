@@ -4,6 +4,7 @@ import { Pedido } from 'src/app/models';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { CarritoService } from '../../services/carrito.service';
 import { Subscription } from 'rxjs';
+import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 
 @Component({
   selector: 'app-carrito',
@@ -18,7 +19,8 @@ export class CarritoComponent implements OnInit, OnDestroy {
   cantidad : number;
   constructor(public menucontroller: MenuController,
              public firestoreService: FirestoreService,
-             public carritoService : CarritoService) { 
+             public carritoService : CarritoService,
+             public firebaseauthService : FirebaseauthService) { 
              this.initCarrito();
              this.loadPedido();
              }
@@ -69,9 +71,21 @@ export class CarritoComponent implements OnInit, OnDestroy {
     } );
   };
 
-  pedir(){
+  async pedir(){
+    if (!this.pedido.productos.length){
+      console.log("Añade items al carrito");
+      return;
+    }
     this.pedido.fecha = new Date();
-    console.log("Pedir ->",this.pedido);
+    this.pedido.precioTotal = this.total;
+    this.pedido.id = this.firestoreService.getId();
+    const uid = await this.firebaseauthService.getUid();
+    const path = 'Clientes/' + uid + '/pedidos/';
+    console.log("Pedir ->",this.pedido, uid, path );
+    this.firestoreService.createDoc(this.pedido,path,this.pedido.id).then( ()=> {
+      console.log('Guardado Con Exito');
+      this.carritoService.clearCarrito();
+    } );
   };
 
 }
