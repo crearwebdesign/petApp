@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
-import { FirestorageService } from '../../services/firestorage.service';
 import { FirebaseauthService } from '../../services/firebaseauth.service';
+import { Subscription } from 'rxjs';
+import { FirestoreService } from '../../services/firestore.service';
+import { Pedido } from 'src/app/models';
 
 @Component({
   selector: 'app-mispedidos',
@@ -10,8 +12,10 @@ import { FirebaseauthService } from '../../services/firebaseauth.service';
 })
 export class MispedidosComponent implements OnInit {
 
+  nuevosSuscriber : Subscription;
+  pedidosNuevos : Pedido[] = [];
   constructor(public menucontroller: MenuController,
-              public firestorageService:FirestorageService,
+              public firestoreService:FirestoreService,
               public firebaseauthService:FirebaseauthService) { }
 
   ngOnInit() {}
@@ -31,8 +35,16 @@ export class MispedidosComponent implements OnInit {
     }
   }
 
-  getPedidosNuevos(){
+  async getPedidosNuevos(){
     console.log("getPedidosNuevos()");
+    const uid = await this.firebaseauthService.getUid();
+    const path = 'Clientes/'+ uid + '/pedidos/';
+    this.nuevosSuscriber = this.firestoreService.getCollection<Pedido>(path).subscribe( res => {
+        if ( res.length){
+            this.pedidosNuevos = res;
+        }
+    } );
+
   }
 
   getPedidosCulminados(){
