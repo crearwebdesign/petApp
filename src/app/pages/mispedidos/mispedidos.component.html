@@ -40,7 +40,14 @@
   </div>
 
     <ion-card *ngFor="let pedido of pedidosNuevos">
-        <app-itemcarrito *ngFor="let producto of pedido.productos" [productoPedido]="producto" [botones]=false  ></app-itemcarrito>
+        <ion-item>
+          <ion-label class="normal">
+            Estado : {{pedido.estado}}
+            <p>Fecha : {{pedido.fecha.seconds | date}}</p>
+          </ion-label>
+        </ion-item>
+        <app-itemcarrito *ngFor="let producto of pedido.productos" [productoPedido]="producto" [botones]=false  >
+        </app-itemcarrito>
     </ion-card>
 
 </ion-content>
